@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { useAppSelector } from "@/lib/hooks";
 import { useState } from "react";
-import { useAppDispatch } from "@/lib/hooks";
-import { fetchLoggedInUser } from "@/lib/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/configs/redux/hooks";
+import { fetchLoggedInUser } from "@/configs/redux/auth/authSlice";
 
 
 export const ProfileModal = () => {
@@ -48,4 +47,3 @@ export const ProfileModal = () => {
     </>
   );
 }
-
