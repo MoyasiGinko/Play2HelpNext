@@ -2,7 +2,8 @@
 
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import { useSaveTokens } from '../utils/useSaveTokens';
+import { useSaveTokens } from '@/utils/accounts/useSaveTokens';
+
 
 export const GoogleCallback = () => {
   const SaveTokensToLocal = useSaveTokens();
