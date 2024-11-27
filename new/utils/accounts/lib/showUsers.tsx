@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { AxiosReqInstance } from './utils/axiosInstance';
+import { AxiosReqInstance } from '@/utils/accounts/axiosInstance';
 
 interface User {
   id: number;
