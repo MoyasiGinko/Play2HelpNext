@@ -27,12 +27,14 @@ const Header = () => {
     e: React.MouseEvent<HTMLLIElement, MouseEvent>,
     menuItem: MenuItem,
   ) => {
-    e.preventDefault();
-    setActiveMenu(menuItem.title);
-    if (menuItem.id === 5 || menuItem.id === 6) {
-      setDropdownToggler(!dropdownToggler);
-    } else {
-      setNavigationOpen(!navigationOpen);
+    if (!e.ctrlKey) {
+      e.preventDefault();
+      setActiveMenu(menuItem.title);
+      if (menuItem.id === 5 || menuItem.id === 6) {
+        setDropdownToggler(!dropdownToggler);
+      } else {
+        setNavigationOpen(!navigationOpen);
+      }
     }
   };
   // Sticky menu
