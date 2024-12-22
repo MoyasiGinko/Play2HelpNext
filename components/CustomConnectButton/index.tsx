@@ -1,98 +1,90 @@
-"use client"
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-
+import CustomOpenModal from './customOpenModal';
 
 export const CustomConnectButton = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <ConnectButton.Custom>
       {({
-        account,            // Account details (e.g., address, ENS name)
-        chain,              // Chain details (e.g., name, ID)
-        openAccountModal,   // Opens the account modal
-        openChainModal,     // Opens the network switch modal
-        openConnectModal,   // Opens the wallet connect modal
-        mounted,            // Checks if the button is ready to display
+        account,
+        chain,
+        openChainModal,
+        openConnectModal,
+        mounted,
       }) => {
         const ready = mounted;
         const connected = ready && account && chain;
 
         return (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '10px',
-            }}
-          >
+          <div className="flex flex-col items-center gap-2.5">
             {!connected && (
               <button
-                onClick={openConnectModal} // Trigger wallet connection modal
-                style={{
-                  padding: '10px 20px',
-                  fontSize: '16px',
-                  background: '#4CAF50',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                }}
+                onClick={openConnectModal}
+                className="px-5 py-2.5 text-lg bg-green-600 text-white border-none rounded-lg cursor-pointer"
               >
                 Connect Wallet
               </button>
             )}
 
             {connected && chain.unsupported && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <button
-                  onClick={openChainModal} // Trigger network switch modal
-                  style={{
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                    background: '#f44336',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Wrong Network
-                </button>
-              </div>
+              <button
+                onClick={openChainModal}
+                className="px-5 py-2.5 text-lg bg-red-600 text-white border-none rounded-lg cursor-pointer"
+              >
+                Wrong Network
+              </button>
             )}
 
             {connected && !chain.unsupported && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div className="relative">
                 <button
-                  onClick={openAccountModal} // Trigger account modal
-                  style={{
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                    background: '#2196F3',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {account.balanceSymbol} {account.displayBalance} {account.displayName}
+                  onClick={() => setIsModalOpen(true)}
+                  className="group flex items-center justify-center space-x-1.5 px-4 py-2.5 
+                    bg-gradient-to-r from-blue-500 to-purple-500 
+                    text-white 
+                    rounded-xl 
+                    shadow-md 
+                    hover:shadow-lg 
+                    transition-all 
+                    duration-300 
+                    ease-in-out 
+                    transform 
+                    hover:-translate-y-0.5
+                    active:scale-95"
+                    >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 mr-1 opacity-70 group-hover:opacity-100 transition-opacity"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <span className="text-sm font-medium tracking-tight truncate max-w-[120px]">
+                    {account.displayName}
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 opacity-70 group-hover:opacity-100 transition-opacity ml-0.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
 
-                <button
-                  onClick={openChainModal} // Trigger network switch modal
-                  style={{
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                    background: '#FFC107',
-                    color: 'black',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Change Network
-                </button>
+                {isModalOpen && (
+                  <CustomOpenModal
+                    account={account}
+                    openChainModal={openChainModal}
+                    setIsModalOpen={setIsModalOpen}
+                  />
+                )}
               </div>
             )}
           </div>

@@ -11,19 +11,19 @@ const Downloads = () => {
       id: "windows",
       name: "Windows",
       icon: "/images/icon/windows.png",
-      url: "https://drive.google.com/file/d/1sNZXkOK9aLOtkLAh4yScnCzA_ROGcdhk/view?usp=sharing",
+      url: "https://storage.googleapis.com/indexpck/play2world3d_desktop.zip",
     },
     {
       id: "mac",
       name: "MacOS",
       icon: "/images/icon/mac2.png",
-      url: "https://drive.google.com/file/d/1sNZXkOK9aLOtkLAh4yScnCzA_ROGcdhk/view?usp=sharing",
+      url: "https://storage.googleapis.com/indexpck/play2world3d_desktop.zip",
     },
     {
       id: "linux",
       name: "Linux",
       icon: "/images/icon/linux.png",
-      url: "https://drive.google.com/file/d/1sNZXkOK9aLOtkLAh4yScnCzA_ROGcdhk/view?usp=sharing",
+      url: "https://storage.googleapis.com/indexpck/play2world3d_desktop.zip",
     },
   ];
 
