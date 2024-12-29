@@ -2,9 +2,23 @@
 import React, { useState, useEffect } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import CustomOpenModal from '../CustomConnectButton/customOpenModal';
+import axios from 'axios';
 
 export const WalletLogin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const sendAddressToGodot = async (address) => {
+    console.log('I am in sendAddressToGodot');
+    try {
+      const response = await axios.post(`http://localhost:4242`, {
+      "wallet-address": address
+      });
+      if (response.status === 200) {
+      console.log('Successfully sent address to Godot');
+      }
+    } catch (error) {
+      console.error('Failed to send address to Godot:', error);
+    }
+  };
   return (
     <ConnectButton.Custom>
       {({
@@ -19,6 +33,9 @@ export const WalletLogin = () => {
         useEffect(() => {
           if (!connected) {
             openConnectModal();
+          } else {
+            console.log('Connected wallet address:', account.address);
+            sendAddressToGodot(account.address);
           }
         }, [connected, openConnectModal]);
 
