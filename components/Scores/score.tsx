@@ -34,7 +34,7 @@ const ScoreCard = ({ score, handleClaim } : {score: ScoreDataInterface, handleCl
       </div>
       <div className="text-right">
         <p className="text-md font-medium text-gray-600">Reward</p>
-        <p className="text-sm font-bold text-blue-600">{score.tokens} Token </p>
+        <p className="text-sm font-bold text-blue-600">{score.tokens - score.claimed_tokens} Token </p>
       </div>
 
       <button

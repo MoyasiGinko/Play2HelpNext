@@ -1,10 +1,25 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import CustomOpenModal from './customOpenModal';
+import { AxiosReqInstance } from '../accounts/utils/axiosInstance';
 
 export const CustomConnectButton = () => {
+  const protectedUrl = AxiosReqInstance();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const previousAddressRef = useRef<string | null>(null);
+
+  const saveWalletAddress = async (walletAddress: string) => {
+    try {
+      const url = process.env.NEXT_PUBLIC_BACKEND_BASE_URL + '/api/users/saveWalletAddress/';
+      const response = await protectedUrl.post(url, { "wallet_address": walletAddress });
+      if (response.status === 200) {
+        console.log('wallet address saved successfully');
+      }
+    } catch (error) {
+      console.error('error while saving wallet address', error);
+    }
+  };
 
   return (
     <ConnectButton.Custom>
@@ -17,6 +32,18 @@ export const CustomConnectButton = () => {
       }) => {
         const ready = mounted;
         const connected = ready && account && chain;
+
+        useEffect(() => {
+          if (connected && account.address) {
+            if (previousAddressRef.current !== account.address) {
+              console.log('Wallet address changed or newly connected, saving to database');
+              saveWalletAddress(account.address);
+              previousAddressRef.current = account.address;
+            }
+          } else {
+            previousAddressRef.current = null;
+          }
+        }, [connected, account?.address]);
 
         return (
           <div className="flex flex-col items-center gap-2.5">
@@ -54,7 +81,7 @@ export const CustomConnectButton = () => {
                     transform 
                     hover:-translate-y-0.5
                     active:scale-95"
-                    >
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5 mr-1 opacity-70 group-hover:opacity-100 transition-opacity"
@@ -92,4 +119,4 @@ export const CustomConnectButton = () => {
       }}
     </ConnectButton.Custom>
   );
-};
+}
