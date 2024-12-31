@@ -14,6 +14,7 @@ const contractAddress = process.env.NEXT_PUBLIC_TOKEN_DISTRIBUTOR_ADDRESS || "0x
 const { NEXT_PUBLIC_BACKEND_BASE_URL } = process.env;
 
 const ScoreCard = ({ score, handleClaim } : {score: ScoreDataInterface, handleClaim: (gameName, tokens) => void}) => {
+  const claimableTokens = score.tokens - score.claimed_tokens;
   return (
     <div
       className={`
@@ -34,12 +35,12 @@ const ScoreCard = ({ score, handleClaim } : {score: ScoreDataInterface, handleCl
       </div>
       <div className="text-right">
         <p className="text-md font-medium text-gray-600">Reward</p>
-        <p className="text-sm font-bold text-blue-600">{score.tokens} Token </p>
+        <p className="text-sm font-bold text-blue-600">{claimableTokens} Token </p>
       </div>
 
       <button
           className="flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-5 py-2.5 font-medium text-white shadow-lg transition duration-300 ease-in-out hover:from-blue-600 hover:to-blue-700 focus:ring-2 focus:ring-blue-300"
-          onClick={() => {handleClaim(score.game, score.tokens)}}
+          onClick={() => {handleClaim(score.game, claimableTokens)}}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -80,6 +81,8 @@ const Score = () => {
   const [tokenInfo, setTokenInfo] = useState<TokenInfoInterface | null>(null);
   const protectedRoute = AxiosReqInstance();
   const { address, isConnected } = useAccount();
+  const [gameName, setGameName] = useState<string>("");
+  const [claimableTokens, setClaimableTokens] = useState<number>(0.0);
 
   const {
     data: hash,
@@ -91,16 +94,34 @@ const Score = () => {
   } = useWriteContract();
 
   useEffect(() => {
-    if (isSuccess) {
-      toast.success(`Transaction hash: ${hash}`, {
-        position: "top-right",
-      });
-     //update the table here after a succesful claim 
-     //token token-field: increment by 30
-     //display claimable tokens =.> token - token_claimed 80 - 60 = 20
-     
+    const updateClaimedTokens = async () => {
+      if (isSuccess) {
+        toast.success(`Transaction hash: ${hash}`, {
+          position: "top-right",
+        });
+        
+        //update the table here after a succesful claim 
+        //token token-field: increment by 30
+        //display claimable tokens =.> token - token_claimed 80 - 60 = 20
 
-    }
+        const currentDate = new Date().toISOString();
+        const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/setClaimTokens/`;
+        const body = {
+          "claimed_tokens": claimableTokens,
+          "last_claimed_date": currentDate,
+          "game": gameName,
+        };
+        try {
+          const response = await protectedRoute.post(url, body);
+          if (response.status === 200) {
+            console.log("Claimed Tokens updated successfully");
+          }
+        } catch (error) {
+          console.error("Error while updating claimed tokens at score.tsx", error);
+        }
+      }
+    };
+    updateClaimedTokens();
   }, [hash, isSuccess]);
 
   useEffect(() => {
@@ -112,25 +133,26 @@ const Score = () => {
     }
   }, [isError]);
 
-  const HandleClaim = async (gameName: string, tokens: number) => {
+  const HandleClaim = async (gameName: string, claimableTokens: number) => {
     //claim their Reward
     //address, token, amount, dateModified
     //serialMerkle => dateModified
     console.log("Claiming Rewards.....");
-
+    setClaimableTokens(claimableTokens);
     const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/getScoreData/`;
     try {
       const response = await protectedRoute.get(url, {params: {gameName}});
       if (response.status === 200) {
         const { tokenInfo } = response.data;
         setTokenInfo(tokenInfo);
+        setGameName(gameName);
         if (!isConnected || address === null) {
           toast.info("Please connect your wallet first");
           return;
         }
         console.log("All Token info is", tokenInfo); 
         console.log("the address is", address);
-        console.log('the token amount are', tokens);
+        console.log('the token amount are', claimableTokens);
         console.log('token name is', tokenInfo.token_name);
         console.log('token symbol is', tokenInfo.token_symbol);
         console.log('solana token address is', tokenInfo.solana_contract_address);
@@ -141,7 +163,7 @@ const Score = () => {
               ethers.AbiCoder.defaultAbiCoder().encode(["address", "address", "uint256"], [
                 address,
                 tokenInfo?.bnb_contract_address,
-                ethers.parseEther(tokens.toString()),
+                ethers.parseEther(claimableTokens.toString()),
         ]))
 
         let merkelDataResponse = await fetch(`${NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/getMerkelDataView/`, {
@@ -164,7 +186,7 @@ const Score = () => {
         address: contractAddress as any,
         abi: GameTokenDistributor,
         functionName: "claimTokens",
-        args: [ tokenInfo?.bnb_contract_address, tokens, proof, ],
+        args: [ tokenInfo?.bnb_contract_address, claimableTokens, proof, ],
       });
 
     } catch (error) {
