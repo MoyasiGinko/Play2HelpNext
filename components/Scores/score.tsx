@@ -138,7 +138,9 @@ const Score = () => {
     //address, token, amount, dateModified
     //serialMerkle => dateModified
     console.log("Claiming Rewards.....");
-    setClaimableTokens(claimableTokens);
+    claimableTokens = Math.floor(claimableTokens);
+    setClaimableTokens( claimableTokens);
+    console.log('the type of claimable tokens is', typeof claimableTokens);
     const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/getScoreData/`;
     try {
       const response = await protectedRoute.get(url, {params: {gameName}});
@@ -166,7 +168,7 @@ const Score = () => {
                 ethers.parseEther(claimableTokens.toString()),
         ]))
 
-        let merkelDataResponse = await fetch(`${NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/getMerkelDataView/`, {
+        let merkelDataResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/getMerkelDataView/`, {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',
@@ -189,11 +191,13 @@ const Score = () => {
         args: [ tokenInfo?.bnb_contract_address, claimableTokens, proof, ],
       });
 
-    } catch (error) {
-      if (error.response.statusText === 'Unauthorized') {
-        toast.error("Please login to claim your rewards");
-      }
+    } catch (error: any) {
       console.error("Error while getting userInfo at score.tsx", error);
+      if (error.response?.statusText === 'Unauthorized') {
+        toast.error("Please login to claim your rewards");
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   };
 
