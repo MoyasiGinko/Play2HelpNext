@@ -47,9 +47,8 @@ async function executeCronJob() {
         //generate the merkle tree
         const { serializedLeaves, merkleRoot } = GenerateMerkleDatastructure(filterTokenRewards);
 
-        console.log("serializedLeaves: ", serializedLeaves);
-        console.log("merkleRoot: ", merkleRoot);
-
+        console.log("filtered token: ", filterTokenRewards);
+        
         const body = {
             "serialized_leaves": serializedLeaves,
             "modified_date": new Date().toISOString()
