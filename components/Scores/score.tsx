@@ -6,7 +6,7 @@ import { Trophy, Star } from "lucide-react";
 import { getGameIcon } from "./GameIcon";
 import { toast } from "react-toastify";
 import { ethers, keccak256 } from "ethers";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount, useWriteContract, useSimulateContract } from "wagmi";
 import GameTokenDistributor from "../../abis/GameTokenDistributor.json";
 import { RegenerateMerkleTree } from "@/utils/lib/generateMerkleDataStructure";
 
@@ -84,6 +84,7 @@ const Score = () => {
   const { address, isConnected } = useAccount();
   const [gameName, setGameName] = useState<string>("");
   const [claimableTokens, setClaimableTokens] = useState<number>(0.0);
+  const [claimArgs, setClaimArgs] = useState<readonly [string, bigint, `0x${string}`[]] | undefined>(undefined);
 
   const {
     data: hash,
@@ -93,6 +94,20 @@ const Score = () => {
     isPending,
     isError,
   } = useWriteContract();
+
+  const { data: simulateData, error: simulateError } = useSimulateContract({
+    address: contractAddress as `0x${string}`,
+    abi: GameTokenDistributor,
+    functionName: "claimTokens",
+    args: claimArgs,
+  });
+
+  useEffect(() => {
+    if (simulateError) {
+      console.error('Simulation error:', simulateError);
+      toast.error(`Transaction would fail: ${simulateError.message}`);
+    }
+  }, [simulateError]);
 
   useEffect(() => {
     const updateClaimedTokens = async () => {
@@ -180,16 +195,33 @@ const Score = () => {
       console.log("Merkel Data is", merkelData);
       const {merkelTree} = RegenerateMerkleTree(merkelData.serialized_leaves);
       const proof = merkelTree.getHexProof(leaf);
+
       
+      if (!tokenInfo?.bnb_contract_address) {
+        toast.error("Token address not found");
+        return;
+      }
+
+      const args = [
+        tokenInfo.bnb_contract_address,
+        ethers.parseEther(claimableTokens.toString()),
+        proof as `0x${string}`[],
+      ] as const;
+
+      setClaimArgs(args);
+      
+      await new Promise(resolve => setTimeout(resolve, 0));
       //i need the date modified here of the gane token row 
       //so as to determine if i call the transition
       console.log('the bnb contract address is', tokenInfo?.bnb_contract_address);
-      writeContract({
-        address: contractAddress as any,
-        abi: GameTokenDistributor,
-        functionName: "claimTokens",
-        args: [ tokenInfo?.bnb_contract_address, ethers.parseEther(claimableTokens.toString()), proof ],
-      });
+      if (!simulateError) {
+        writeContract({
+          address: contractAddress as `0x${string}`,
+          abi: GameTokenDistributor,
+          functionName: "claimTokens",
+          args: args,
+        });
+      }
 
     } catch (error: any) {
       console.error("Error while getting userInfo at score.tsx", error);
