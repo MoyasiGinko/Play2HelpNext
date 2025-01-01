@@ -1,7 +1,6 @@
 runtime: nodejs20
 instance_class: F1
 service: play2help-frontend
-
 env: standard
 
 env_variables:
@@ -13,16 +12,15 @@ env_variables:
   NEXT_PUBLIC_GOOGLE_REDIRECT_URI: accounts/googleCallback
   NEXT_PUBLIC_MICROSOFT_CLIENT_ID: 4cf503a4-d1f5-465b-8055-8920873e2c8d
   NEXT_PUBLIC_MICROSOFT_REDIRECT_URI: accounts/msCallback
-  NEXT_PUBLIC_PROJECT_ID: "70e31bc6de41a78afa337a07d769bb9c"
+  NEXT_PUBLIC_PROJECT_ID: 70e31bc6de41a78afa337a07d769bb9c
   NODE_ENV: production
   HTTPS: true
-  
 
 automatic_scaling:
   target_cpu_utilization: 0.65
   max_instances: 5
 
 handlers:
-- url: /.*
-  script: auto
-  secure: always
+  - url: /.*
+    script: auto
+    secure: always

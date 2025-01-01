@@ -11,6 +11,7 @@ import GameTokenDistributor from "../../abis/GameTokenDistributor.json";
 import { RegenerateMerkleTree } from "@/utils/lib/generateMerkleDataStructure";
 
 const contractAddress = process.env.NEXT_PUBLIC_TOKEN_DISTRIBUTOR_ADDRESS || "0x"
+console.log('the contract address is', contractAddress);
 const { NEXT_PUBLIC_BACKEND_BASE_URL } = process.env;
 
 const ScoreCard = ({ score, handleClaim } : {score: ScoreDataInterface, handleClaim: (gameName, tokens) => void}) => {
@@ -138,9 +139,8 @@ const Score = () => {
     //address, token, amount, dateModified
     //serialMerkle => dateModified
     console.log("Claiming Rewards.....");
-    claimableTokens = Math.floor(claimableTokens);
     setClaimableTokens( claimableTokens);
-    console.log('the type of claimable tokens is', typeof claimableTokens);
+    console.log('the claimable tokens are', claimableTokens);
     const url = `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/getScoreData/`;
     try {
       const response = await protectedRoute.get(url, {params: {gameName}});
@@ -152,13 +152,13 @@ const Score = () => {
           toast.info("Please connect your wallet first");
           return;
         }
-        console.log("All Token info is", tokenInfo); 
-        console.log("the address is", address);
-        console.log('the token amount are', claimableTokens);
-        console.log('token name is', tokenInfo.token_name);
-        console.log('token symbol is', tokenInfo.token_symbol);
-        console.log('solana token address is', tokenInfo.solana_contract_address);
-        console.log('bnb token address is', tokenInfo.bnb_contract_address);
+        // console.log("All Token info is", tokenInfo); 
+        // console.log("the address is", address);
+        // console.log('the token amount are', claimableTokens);
+        // console.log('token name is', tokenInfo.token_name);
+        // console.log('token symbol is', tokenInfo.token_symbol);
+        // console.log('solana token address is', tokenInfo.solana_contract_address);
+        // console.log('bnb token address is', tokenInfo.bnb_contract_address);
       } 
 
         const leaf = keccak256(
@@ -183,13 +183,13 @@ const Score = () => {
       
       //i need the date modified here of the gane token row 
       //so as to determine if i call the transition
-
+      console.log('the bnb contract address is', tokenInfo?.bnb_contract_address);
       writeContract({
         address: contractAddress as any,
         abi: GameTokenDistributor,
         functionName: "claimTokens",
-        args: [ tokenInfo?.bnb_contract_address, claimableTokens, proof, ],
-      });
+        args: [ tokenInfo?.bnb_contract_address, ethers.parseEther(claimableTokens.toString()), proof ],
+      });
 
     } catch (error: any) {
       console.error("Error while getting userInfo at score.tsx", error);
