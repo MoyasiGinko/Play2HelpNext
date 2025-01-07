@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/configs/redux/hooks";
 import { fetchLoggedInUser } from "@/configs/redux/auth/authSlice";
-import axios from "axios";
 
 
 interface Tokens {

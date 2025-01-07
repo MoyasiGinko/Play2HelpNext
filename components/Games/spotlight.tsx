@@ -19,6 +19,7 @@ export default function Spotlight({
   const [boxes, setBoxes] = useState<Array<HTMLElement>>([]);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     containerRef.current &&
       setBoxes(
         Array.from(containerRef.current.children).map(
@@ -38,6 +39,7 @@ export default function Spotlight({
 
   useEffect(() => {
     onMouseMove();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mousePosition]);
 
   const initContainer = () => {

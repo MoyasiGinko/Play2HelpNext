@@ -6,14 +6,17 @@ import axios from 'axios';
 
 export const WalletLogin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const sendAddressToGodot = async (address) => {
-    console.log('I am in sendAddressToGodot');
+  interface SendAddressResponse {
+    status: number;
+  }
+
+  const sendAddressToGodot = async (address: string): Promise<void> => {
     try {
-      const response = await axios.post(`http://localhost:4242`, {
-      "wallet-address": address
+      const response: SendAddressResponse = await axios.post(`http://localhost:4242`, {
+        "wallet-address": address
       });
       if (response.status === 200) {
-      console.log('Successfully sent address to Godot');
+        console.log('Successfully sent address to Godot');
       }
     } catch (error) {
       console.error('Failed to send address to Godot:', error);
@@ -30,6 +33,7 @@ export const WalletLogin = () => {
       }) => {
         const ready = mounted;
         const connected = ready && account && chain;
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (!connected) {
             openConnectModal();
@@ -37,7 +41,7 @@ export const WalletLogin = () => {
             console.log('Connected wallet address:', account.address);
             sendAddressToGodot(account.address);
           }
-        }, [connected, openConnectModal]);
+        }, [connected, openConnectModal, account?.address]);
 
         return (
           <div className="flex flex-col items-center gap-2.5 mt-44">

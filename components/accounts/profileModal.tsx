@@ -5,7 +5,12 @@ import { useAppDispatch } from "@/configs/redux/hooks";
 import { fetchLoggedInUser } from "@/configs/redux/auth/authSlice";
 
 
-export const ProfileModal = ({setNavopen, navOpen}) => {
+interface ProfileModalProps {
+  setNavopen: (open: boolean) => void;
+  navOpen: boolean;
+}
+
+export const ProfileModal = ({ setNavopen, navOpen }: ProfileModalProps) => {
   const authState = useAppSelector((state) => state.auth);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useAppDispatch();

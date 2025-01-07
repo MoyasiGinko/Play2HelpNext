@@ -2,7 +2,18 @@
 import React from "react";
 import { FaEthereum } from "react-icons/fa";
 
-const RecentActivity = ({ activities }) => (
+interface Activity {
+  id: string;
+  activity: string;
+  time: string;
+  reward: number;
+}
+
+interface RecentActivityProps {
+  activities: Activity[];
+}
+
+const RecentActivity: React.FC<RecentActivityProps> = ({ activities }) => (
   <div className="rounded-xl bg-slate-200 p-6 dark:bg-gray-800">
     <h2 className="mb-6 text-2xl font-bold">Recent Activity</h2>
     <div className="space-y-4">

@@ -18,6 +18,7 @@ const Signup = () => {
     confirmPassword: '',
   });
   const [error, setError] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -71,7 +72,7 @@ const Signup = () => {
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
-      const res = await axios.post(`${baseUrl}/api/users/create/`, {
+      await axios.post(`${baseUrl}/api/users/create/`, {
         name: formData.username,
         email: formData.email,
         password: formData.password,

@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface GameInterface {
   id: string;
   playLink: string;

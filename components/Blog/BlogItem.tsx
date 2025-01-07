@@ -2,7 +2,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useMemo } from "react";
 import Link from "next/link";
-import BlogData from "./blogData";
 import { Charity } from "@/types/charity";
 
 interface BlogItemProps {
@@ -10,7 +9,7 @@ interface BlogItemProps {
 }
 
 const BlogItem: React.FC<BlogItemProps> = ({ blog }) => {
-  const widgets = useMemo(() => [{ ...blog }], []);
+  const widgets = useMemo(() => [{ ...blog }], [blog]);
 
   useEffect(() => {
     widgets.forEach((widget) => {

@@ -4,6 +4,7 @@ import EditProfileModal from "./EditProfileModal";
 import GameStats from "./GameStats";
 import RecentActivity from "./RecentActivity";
 import CryptoTokens from "./CryptoTokens";
+import Image from "next/image";
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -26,22 +27,22 @@ const UserProfile = () => {
     },
     recentActivities: [
       {
-        id: 1,
+        id: "1",
         activity: "Won Fortnite Tournament",
         time: "2 hours ago",
         reward: 100,
       },
       {
-        id: 2,
+        id: "2",
         activity: "Completed Daily Challenge",
         time: "5 hours ago",
         reward: 50,
       },
-      { id: 3, activity: "Reached Level 42", time: "1 day ago", reward: 200 },
+      { id: "3", activity: "Reached Level 42", time: "1 day ago", reward: 200 },
     ],
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setUser((prev) => ({
       ...prev,
@@ -49,18 +50,19 @@ const UserProfile = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsEditing(false);
   };
-
   return (
     <div className="min-h-screen bg-slate-50 p-4 text-black dark:bg-gray-900 dark:text-white md:p-8">
       <div className="relative mb-8 rounded-xl bg-gradient-to-r from-purple-900 to-blue-900 p-6">
         <div className="flex items-center gap-6">
-          <img
+          <Image
             src={user.profile.image}
             alt="Profile"
+            width={128}
+            height={128}
             className="h-32 w-32 rounded-full border-4 border-purple-500 object-cover"
           />
           <div>

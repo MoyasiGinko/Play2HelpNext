@@ -38,7 +38,7 @@ function useMousePosition(): MousePosition {
 
 interface MagicContainerProps {
   children?: ReactNode;
-  className?: any;
+  className?: string;
 }
 
 const MagicContainer = ({ children, className }: MagicContainerProps) => {
@@ -50,10 +50,11 @@ const MagicContainer = ({ children, className }: MagicContainerProps) => {
 
   useEffect(() => {
     init();
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     containerRef.current &&
       setBoxes(
         Array.from(containerRef.current.children).map(
-          (el) => el as HTMLElement,
+          (el: Element) => el as HTMLElement,
         ),
       );
   }, []);
@@ -68,40 +69,39 @@ const MagicContainer = ({ children, className }: MagicContainerProps) => {
   }, [setBoxes]);
 
   useEffect(() => {
+    const onMouseMove = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const { w, h } = containerSize.current;
+        const x = mousePosition.x - rect.left;
+        const y = mousePosition.y - rect.top;
+        const inside = x < w && x > 0 && y < h && y > 0;
+  
+        mouse.current.x = x;
+        mouse.current.y = y;
+        boxes.forEach((box) => {
+          const boxX =
+            -(box.getBoundingClientRect().left - rect.left) + mouse.current.x;
+          const boxY =
+            -(box.getBoundingClientRect().top - rect.top) + mouse.current.y;
+          box.style.setProperty("--mouse-x", `${boxX}px`);
+          box.style.setProperty("--mouse-y", `${boxY}px`);
+  
+          if (inside) {
+            box.style.setProperty("--opacity", `1`);
+          } else {
+            box.style.setProperty("--opacity", `0`);
+          }
+        });
+      }
+    };
     onMouseMove();
-  }, [mousePosition]);
+  }, [mousePosition, boxes]);
 
   const init = () => {
     if (containerRef.current) {
       containerSize.current.w = containerRef.current.offsetWidth;
       containerSize.current.h = containerRef.current.offsetHeight;
-    }
-  };
-
-  const onMouseMove = () => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const { w, h } = containerSize.current;
-      const x = mousePosition.x - rect.left;
-      const y = mousePosition.y - rect.top;
-      const inside = x < w && x > 0 && y < h && y > 0;
-
-      mouse.current.x = x;
-      mouse.current.y = y;
-      boxes.forEach((box) => {
-        const boxX =
-          -(box.getBoundingClientRect().left - rect.left) + mouse.current.x;
-        const boxY =
-          -(box.getBoundingClientRect().top - rect.top) + mouse.current.y;
-        box.style.setProperty("--mouse-x", `${boxX}px`);
-        box.style.setProperty("--mouse-y", `${boxY}px`);
-
-        if (inside) {
-          box.style.setProperty("--opacity", `1`);
-        } else {
-          box.style.setProperty("--opacity", `0`);
-        }
-      });
     }
   };
 
@@ -145,28 +145,12 @@ interface MagicCardProps {
   size?: number;
 
   /**
-   * @default true
-   * @type boolean
-   * @description
-   * Whether to show the spotlight
-   * */
-  spotlight?: boolean;
-
-  /**
    * @default "rgba(255,255,255,0.03)"
    * @type string
    * @description
    * The color of the spotlight
    * */
   spotlightColor?: string;
-
-  /**
-   * @default true
-   * @type boolean
-   * @description
-   * Whether to isolate the card which is being hovered
-   * */
-  isolated?: boolean;
 
   /**
    * @default "rgba(255,255,255,0.03)"
@@ -176,16 +160,14 @@ interface MagicCardProps {
    * */
   background?: string;
 
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const MagicCard: React.FC<MagicCardProps> = ({
   className,
   children,
   size = 600,
-  spotlight = true,
-  borderColor = "hsl(0 0% 98%)",
-  isolated = true,
+  spotlightColor = "rgba(255,255,255,0.03)",
   ...props
 }) => {
   return (
@@ -193,7 +175,7 @@ const MagicCard: React.FC<MagicCardProps> = ({
       style={
         {
           "--mask-size": `${size}px`,
-          "--border-color": `${borderColor}`,
+          "--border-color": `${spotlightColor}`,
         } as CSSProperties
       }
       className={cn(

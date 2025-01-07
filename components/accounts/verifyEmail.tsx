@@ -21,6 +21,7 @@ export const VerifyEmail = ({token}:{token: string}) => {
         setIsLoading(false);
         toast.error("Failed to verify email.");
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setIsLoading(false);
       toast.error("An error occurred while verifying email.");
@@ -31,6 +32,7 @@ export const VerifyEmail = ({token}:{token: string}) => {
     if (token) {
       verifyEmail();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   return (
