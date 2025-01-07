@@ -2,7 +2,21 @@
 import React from "react";
 import { FaTimes, FaTwitter, FaTwitch, FaDiscord } from "react-icons/fa";
 
-const EditProfileModal = ({
+interface EditProfileModalProps {
+  isEditing: boolean;
+  onClose: () => void;
+  editedUser: {
+    username: string;
+    bio: string;
+    twitter?: string;
+    twitch?: string;
+    discord?: string;
+  };
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+}
+
+const EditProfileModal: React.FC<EditProfileModalProps> = ({
   isEditing,
   onClose,
   editedUser,
@@ -44,9 +58,9 @@ const EditProfileModal = ({
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Social Links</h3>
             {[
-              { label: "Twitter", icon: FaTwitter, name: "twitter" },
-              { label: "Twitch", icon: FaTwitch, name: "twitch" },
-              { label: "Discord", icon: FaDiscord, name: "discord" },
+              { label: "Twitter", icon: FaTwitter, name: "twitter" as keyof typeof editedUser },
+              { label: "Twitch", icon: FaTwitch, name: "twitch" as keyof typeof editedUser },
+              { label: "Discord", icon: FaDiscord, name: "discord" as keyof typeof editedUser },
             ].map(({ label, icon: Icon, name }) => (
               <div key={name}>
                 <label className="mb-2 flex items-center gap-2 text-sm font-medium">

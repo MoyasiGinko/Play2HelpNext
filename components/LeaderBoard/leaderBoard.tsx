@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Trophy, Gamepad2, Loader2 } from 'lucide-react';
+import { Trophy, Loader2 } from 'lucide-react';
 import { getGameIcon } from '../Scores/GameIcon';
 
 interface LeaderboardEntry {

@@ -2,12 +2,12 @@
 
 import SidebarLink from "@/components/Docs/SidebarLink";
 import { useState } from "react";
-import { docsData } from "./docsData"; // Import the updated docsData
+import { docsData } from "./docsData";
+type DocsDataKeys = keyof typeof docsData;
 
 export default function Docs() {
-  const [activeSection, setActiveSection] = useState("introduction");
-  const [error, setError] = useState<string | null>(null); // Error state
-
+  const [activeSection, setActiveSection] = useState<DocsDataKeys>("introduction");
+  const [error, setError] = useState<string | null>(null);
   return (
     <section className="pb-16 pt-24 md:pb-20 md:pt-28 lg:pb-24 lg:pt-32">
       <div className="container mx-auto">
@@ -20,16 +20,17 @@ export default function Docs() {
                   activeSection={activeSection}
                   setActiveSection={(section) => {
                     try {
-                      if (!docsData[section]) {
-                        throw new Error("Invalid section selected.");
+                      // if (!docsData[section]) {
+                      //   throw new Error("Invalid section selected.");
+                      // }
+                      setError(null);
+                      setActiveSection(section as DocsDataKeys);
+                    } catch (err: unknown) {
+                      if (err instanceof Error) {
+                        setError(err.message);
+                      } else {
+                        setError("An unexpected error occurred.");
                       }
-                      setError(null); // Clear previous errors
-                      setActiveSection(section);
-                    } catch (err: any) {
-                      setError(
-                        err.message ||
-                          "An error occurred while selecting the section.",
-                      );
                     }
                   }}
                 />

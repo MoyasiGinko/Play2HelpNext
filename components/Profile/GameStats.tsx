@@ -2,7 +2,13 @@
 import React from "react";
 import { FaCrown, FaGamepad, FaTrophy } from "react-icons/fa";
 
-const GameStats = ({ level, gamesPlayed, achievements }) => {
+interface GameStatsProps {
+  level: number;
+  gamesPlayed: number;
+  achievements: number;
+}
+
+const GameStats: React.FC<GameStatsProps> = ({ level, gamesPlayed, achievements }) => {
   const stats = [
     { label: "Level", value: level, icon: FaCrown, color: "text-yellow-500" },
     {

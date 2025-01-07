@@ -6,7 +6,7 @@ export async function runTask() {
     //create the task here to update the merkle tree
     //get an array of tokenReward
     //construct the merkelTree
-    const gameReward = [] //coming from the database
+    const gameReward: any[] = []; //coming from the database
     const { serializedLeaves, merkleRoot } = GenerateMerkleDatastructure(gameReward);
     //save the leavesNode to the database ( not done)
     //send a transaction to the smart contract to update the merkelRoot

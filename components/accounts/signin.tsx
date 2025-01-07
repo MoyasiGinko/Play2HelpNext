@@ -17,6 +17,7 @@ export const Signin = () => {
   const dispatch = useAppDispatch();
   const isUnverified = useAppSelector((state) => state.auth.isUnVerified);
   const [error, setError] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState<boolean>(false);
   const saveTokensToLocal = useSaveTokens();
   const [formData, setFormData] = useState({
@@ -210,7 +211,7 @@ export const Signin = () => {
 
                 <div className="mt-12.5 border-t border-stroke py-5 text-center dark:border-strokedark">
                   <p>
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?{" "}
                     <Link
                       className="text-black hover:text-primary dark:text-white hover:dark:text-primary"
                       href="/accounts/signup"

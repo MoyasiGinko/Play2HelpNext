@@ -1,8 +1,7 @@
-import { GenerateMerkleDatastructure, RegenerateMerkleTree } from '@/utils/lib/generateMerkleDataStructure';
+import { GenerateMerkleDatastructure} from '@/utils/lib/generateMerkleDataStructure';
 import { NextResponse } from 'next/server';
 import { ethers } from 'ethers';
 import { TokenReward } from '@/types/tokenReward';
-import MerkleTree from 'merkletreejs';
 
 const { NEXT_PUBLIC_BACKEND_BASE_URL, CRON_SECRET, PRIVATE_KEY,
     NEXT_PUBLIC_RPC_URL, NEXT_PUBLIC_TOKEN_DISTRIBUTOR_ADDRESS } = process.env;
@@ -98,7 +97,7 @@ async function sendMerkleRootTransaction(merkleRoot: string) {
         const feeData = await provider.getFeeData();
         const supportsEIP1559 = feeData.maxFeePerGas !== null && feeData.maxPriorityFeePerGas !== null;
 
-        let transactionOptions: any = {};
+        let transactionOptions: ethers.TransactionRequest = {};
 
         if (supportsEIP1559) {
             const maxFeePerGas = feeData.maxFeePerGas

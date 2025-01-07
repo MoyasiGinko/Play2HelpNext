@@ -27,7 +27,7 @@ const Downloads = () => {
     },
   ];
 
-  const handlePlatformChange = (platformId) => {
+  const handlePlatformChange = (platformId: string) => {
     setSelectedPlatform(platformId);
   };
 

@@ -32,7 +32,7 @@ export const CustomConnectButton = () => {
       }) => {
         const ready = mounted;
         const connected = ready && account && chain;
-
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (connected && account.address) {
             if (previousAddressRef.current !== account.address) {

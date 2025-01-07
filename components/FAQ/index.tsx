@@ -9,6 +9,7 @@ const FAQ = () => {
   const [activeFaq, setActiveFaq] = useState(1);
 
   const handleFaqToggle = (id: number) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     activeFaq === id ? setActiveFaq(0) : setActiveFaq(id);
   };
 

@@ -1,14 +1,12 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/configs/redux/hooks";
 import { setUnVerified } from "@/configs/redux/auth/authSlice";
 
 export const ResendVerification = ({ emailProp }: { emailProp: string}) => {
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState(emailProp);
-  const router = useRouter();
   const handleSendVerification = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -24,6 +22,7 @@ export const ResendVerification = ({ emailProp }: { emailProp: string}) => {
         dispatch(setUnVerified(false));
       }
       toast.success("Verification link sent!");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast.error("Failed to send verification");
     }

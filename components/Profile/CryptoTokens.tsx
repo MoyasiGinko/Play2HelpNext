@@ -1,7 +1,11 @@
 import React from "react";
 import { FaEthereum, FaChartLine } from "react-icons/fa";
 
-const CryptoTokens = ({ tokens }) => {
+interface CryptoTokensProps {
+  tokens: number;
+}
+
+const CryptoTokens: React.FC<CryptoTokensProps> = ({ tokens }) => {
   return (
     <div className="mb-8 rounded-xl bg-slate-200 p-6 dark:bg-gray-800">
       <div className="mb-6 flex items-center justify-between">
