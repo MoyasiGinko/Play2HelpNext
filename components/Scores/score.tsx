@@ -187,7 +187,7 @@ const Score = () => {
                 ethers.parseEther(claimableTokens.toString()),
         ]))
 
-        const merkelDataResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/getMerkelDataView/`, {
+        const merkelDataResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/tokens/getMerkelDataView/`, {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ const { NEXT_PUBLIC_BACKEND_BASE_URL } = process.env;
 export async function executeCronJob() {
    
         //fetch the token rewards from the database
-        const responseTokenRewards = await fetch(`${NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/setMerkelDatastructure/`, {
+        const responseTokenRewards = await fetch(`${NEXT_PUBLIC_BACKEND_BASE_URL}/api/tokens/setMerkelDatastructure/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ export async function executeCronJob() {
         }
 
         // Replace with your API endpoint
-        const response = await fetch(`${NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/setMerkelDatastructure/`, {
+        const response = await fetch(`${NEXT_PUBLIC_BACKEND_BASE_URL}/api/tokens/setMerkelDatastructure/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

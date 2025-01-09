@@ -54,7 +54,7 @@ async function executeCronJob() {
             "serialized_leaves": serializedLeaves,
             "modified_date": new Date().toISOString()
         }
-        const response = await fetch(`${NEXT_PUBLIC_BACKEND_BASE_URL}/api/games/setMerkelDatastructure/`, {
+        const response = await fetch(`${NEXT_PUBLIC_BACKEND_BASE_URL}/api/tokens/setMerkelDatastructure/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
